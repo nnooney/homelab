@@ -1,0 +1,24 @@
+---
+# Installs Consul. Currently supported methods of installation:
+#  - From Hashicorp Package Sources
+
+- name: Add HashiCorp repository
+  ansible.builtin.include_role:
+    name: hashicorp-common
+    tasks_from: add_repository
+
+- name: Install `consul` package
+  ansible.builtin.package:
+    name: consul
+    state: present
+  become: yes
+
+- name: Verify Consul binary is in PATH
+  ansible.builtin.stat:
+    path: "/usr/bin/consul"
+  register: consul_binary_verify
+
+- name: Fail if Consul binary is not in PATH
+  ansible.builtin.fail:
+    msg: "Error: Could not find `consul` in PATH after installation."
+  when: not consul_binary_verify.stat.exists

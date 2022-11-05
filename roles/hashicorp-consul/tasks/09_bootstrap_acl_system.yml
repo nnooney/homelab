@@ -1,0 +1,43 @@
+---
+# Bootstraps the ACL system for Consul.
+
+# Create initial bootstrap token
+# consul acl bootstrap
+# Save the SecretID for all subsequent Consul API requests
+
+# Add to environment
+# export CONSUL_HTTP_TOKEN="<Token SecretID from previous step>"
+# export CONSUL_MGMT_TOKEN="<Token SecretID from previous step>"
+
+# Create a node policy file `node-policy.hcl`
+
+# Template:
+# agent_prefix "" {
+#   policy = "write"
+# }
+# node_prefix "" {
+#   policy = "write"
+# }
+# service_prefix "" {
+#   policy = "read"
+# }
+# session_prefix "" {
+#   policy = "read"
+# }
+
+# Generate ACL policy
+# consul acl policy create \
+#   -token=${CONSUL_MGMT_TOKEN} \
+#   -name node-policy \
+#   -rules @node-policy.hcl
+
+# Create node token
+# consul acl token create \
+#   -token=${CONSUL_MGMT_TOKEN} \
+#   -description "node token" \
+#   -policy-name node-policy
+
+# Add node token to all Consul servers
+# consul acl set-agent-token \
+#   -token="<Management Token SecretID>" \
+#   agent "<Node Token SecretID>"

@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Nicholas Nooney
+  description: A role to provision a Raspberry Pi.
+  company: Personal Development
+
+  license: Apache-2.0
+
+  min_ansible_version: 2.1
+
+  platforms:
+  - name: Debian
+    versions:
+    - all
+
+  galaxy_tags:
+  - raspberrypi
+
+dependencies: []

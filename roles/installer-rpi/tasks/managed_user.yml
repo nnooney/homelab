@@ -1,0 +1,30 @@
+---
+
+- name: Create groups for '{{ pi_managed_user }}' user
+  ansible.builtin.group:
+    name: "{{ item }}"
+  with_items: "{{ pi_managed_user_groups }}"
+
+- name: Allow '{{ pi_managed_user_passwordless_sudo_group }}' group to have passwordless sudo
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: '^%{{ pi_managed_user_passwordless_sudo_group }}'
+    line: '%{{ pi_managed_user_passwordless_sudo_group }} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+  when: pi_managed_user_enable_passwordless_sudo
+
+- name: Add '{{ pi_managed_user }}' user
+  ansible.builtin.user:
+    name: "{{ pi_managed_user }}"
+    groups: "{{ pi_managed_user_groups }}"
+    comment: Ansible automation account
+
+- name: Copy SSH key for '{{ pi_managed_user }}' user
+  ansible.posix.authorized_key:
+    key: "{{ item }}"
+    user: "{{ pi_managed_user }}"
+    comment: Ansible managed SSH key
+    exclusive: yes
+  with_file:
+    - "{{ pi_managed_user_ssh_public_key }}"
+  when: pi_managed_user_enable_ssh

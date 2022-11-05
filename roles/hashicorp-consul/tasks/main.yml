@@ -1,0 +1,71 @@
+---
+
+# Determine consul_cluster_role from inventory group. This expects inventory
+# groups in [consul_prime, consul_servers, consul_clients]
+- name: Determine consul_cluster_role
+  ansible.builtin.set_fact:
+    consul_cluster_roles: "{{ group_names | map('regex_search', 'consul_(.+)', '\\1') | list | flatten }}"
+  failed_when:
+    - "consul_cluster_roles | count != 1"
+
+# Validate that the consul_cluster_role is in [prime, servers, clients].
+- name: Validate consul_cluster_role
+  ansible.builtin.set_fact:
+    consul_cluster_role: "{{ consul_cluster_roles[0] }}"
+  failed_when:
+    - "consul_cluster_role not in allowed_cluster_roles"
+
+# Ensure there is only one prime node.
+- name: Ensure there is only one consul_prime
+  ansible.builtin.set_fact:
+    consul_prime: "{{ groups['consul_prime'][0] }}"
+  failed_when:
+    - "groups['consul_prime'] | count != 1"
+
+# Numbered steps are from the Consul deployment guide at
+# https://learn.hashicorp.com/tutorials/consul/deployment-guide
+
+# 1. Install Consul
+# 2. Verify the installation
+- name: Install
+  include_tasks: 01_install.yml
+
+# 3. Prepare the security credentials
+#    prime node generates, server/client nodes retrieve from prime node.
+- name: Prepare security credentials
+  include_tasks: 02_prepare_security_credentials.yml
+
+# 4. Configure Consul agents
+- name: Configure consul agent
+  include_tasks: 03_configure_consul_agent.yml
+
+# 5. Server-specific configuration
+- name: Configure consul server
+  include_tasks: 04_configure_consul_server.yml
+  when: consul_cluster_role in ['prime', 'servers']
+
+# 6. Client-specific configuration
+- name: Configure consul client
+  include_tasks: 05_configure_consul_client.yml
+  when: consul_cluster_role in ['clients']
+
+# 7. Apply enterprise license
+#    Not supported by this role.
+
+# 8. Configure the Consul process
+- name: Configure consul process
+  include_tasks: 06_configure_consul_process.yml
+
+# 9. Start the Consul service
+- name: Start consul service
+  include_tasks: 07_start_consul_service.yml
+
+# 10. Setup Consul environment variables
+- name: Setup consul environment variables
+  include_tasks: 08_setup_consul_env_vars.yml
+
+# 11. Bootstrap the ACL system
+- name: Bootstrap ACL system
+  include_tasks: 09_bootstrap_acl_system.yml
+
+# 12. Next Steps

@@ -1,0 +1,6 @@
+---
+# Configures the consul clients
+# Config file at /etc/consul.d/consul.hcl
+
+# Template:
+# requires a subset of the server-specific configuration.

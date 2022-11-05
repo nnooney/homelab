@@ -1,0 +1,20 @@
+# Run this playbook to setup a Raspberry Pi for further automation with Ansible.
+# It is expected that the user has installed an Operating System and enabled SSH
+# access. No other steps are assumed to have been performed.
+#
+#   ansible-playbook 02_rpi.yml --ask-pass
+#
+
+- name: Install Raspberry Pi
+  hosts: rpi
+  remote_user: "{{ pi_remote_user }}"
+  become: yes
+  vars_prompt:
+    - name: pi_remote_user_new_password
+      prompt: "new password for user '{{ pi_remote_user }}'"
+      private: yes
+      confirm: yes
+  roles:
+    - role: installer-rpi
+      vars:
+        pi_remote_user_change_password: true

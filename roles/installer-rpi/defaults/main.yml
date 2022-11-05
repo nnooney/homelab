@@ -1,0 +1,42 @@
+---
+
+################################################################################
+# Information about the user account to connect to while Ansible installs the
+# Raspberry Pi. As a port of the installation, Ansible creates a new user
+# account to use in future playbooks.
+
+# The username to connect to the Raspberry Pi as.
+pi_remote_user: pi
+
+# If true, change the password of the remote user. A playbook should include a
+# `vars_prompt` section below if changing the password of the remote user:
+#
+# vars_prompt:
+#   - name: pi_remote_user_new_password
+#     prompt: "New password for '{{ pi_remote_user }}'"
+#     private: yes
+#     confirm: yes
+#
+pi_remote_user_change_password: false
+
+################################################################################
+# Information about the user account that Ansible creates and manages for use in
+# future playbooks.
+
+# The username to create for future use.
+pi_managed_user: ansible
+
+# Groups the managed user should belong to. Ansible will create the groups if
+# they do not exist.
+pi_managed_user_groups:
+  - wheel
+
+# Allow the managed user to have passwordless sudo. This is accomplished by
+# adding a line of the form "%group ALL=(ALL) NOPASSWD: ALL" to the sudoers file
+# for the group defined below.
+pi_managed_user_enable_passwordless_sudo: true
+pi_managed_user_passwordless_sudo_group: wheel
+
+# Copy an SSH key to the authorized keys file for the managed user to allow SSH.
+pi_managed_user_enable_ssh: true
+pi_managed_user_ssh_public_key: "{{ playbook_dir }}/keys/ansible_ssh_ed25519.pub"

@@ -1,0 +1,29 @@
+---
+# Configures the consul servers
+# Config file at /etc/consul.d/server.hcl
+
+# Template:
+# server = true
+# bootstrap_expect = 1
+
+# Consul addresses
+# bind_addr = "172.16.0.10"
+# client_addr = "0.0.0.0"
+
+# Consul service mesh
+# connect {
+#   enabled = true
+# }
+
+# addresses {
+#   grpc = "127.0.0.1"
+# }
+
+# ports {
+#   grpc  = 8502
+# }
+
+# Consul UI
+# ui_config {
+#   enabled = true
+# }

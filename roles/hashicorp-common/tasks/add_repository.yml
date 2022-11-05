@@ -1,0 +1,4 @@
+---
+
+- name: Include OS specific details
+  include_tasks: add_repository_{{ ansible_os_family }}.yml

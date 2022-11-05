@@ -1,0 +1,11 @@
+# Run this playbook to turnup a Hashistack cluster (Consul, Vault, Nomad) on
+# several machines. The prime node will generate secrets and distribute them
+# to servers/clients.
+#
+#   ansible-playbook 03_hashistack_turnup.yml
+#
+
+- name: Install and Configure HashiCorp Consul
+  hosts: consul_prime:consul_servers:consul_clients
+  roles:
+    - role: hashicorp-consul

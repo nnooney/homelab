@@ -1,0 +1,12 @@
+# Run this playbook to generate local data required for connecting to remote
+# servers.
+#
+#   ansible-playbook 01_localhost.yml
+#
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Generate an OpenSSH keypair (ed25519)
+      community.crypto.openssh_keypair:
+        path: "{{ playbook_dir }}/keys/ansible_ssh_ed25519"
+        type: ed25519

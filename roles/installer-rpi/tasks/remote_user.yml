@@ -1,0 +1,7 @@
+---
+
+- name: Change '{{ pi_remote_user }}' user password
+  ansible.builtin.user:
+    name: "{{ pi_remote_user }}"
+    password: "{{ pi_remote_user_new_password | password_hash('sha512') }}"
+  when: pi_remote_user_change_password

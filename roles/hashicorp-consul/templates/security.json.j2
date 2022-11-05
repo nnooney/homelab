@@ -1,0 +1,26 @@
+{
+  "encrypt": "{{ consul_gossip_key }}",
+
+  "ca_file": "/etc/consul.d/tls/consul-agent-ca.pem",
+{% if consul_cluster_role in ['prime', 'servers'] %}
+  "cert_file": "/etc/consul.d/tls/nooncasa-server-consul-0.pem",
+  "key_file": "/etc/consul.d/tls/nooncasa-server-consul-0-key.pem",
+{% endif %}
+
+{% if consul_cluster_role in ['prime', 'servers'] %}
+  "verify_incoming": true,
+{% else %}
+  "verify_incoming": false,
+{% endif %}
+  "verify_outgoing": true,
+  "verify_server_hostname": true,
+
+  "auto_encrypt": {
+{% if consul_cluster_role in ['prime', 'servers'] %}
+    "allow_tls": true
+{% endif %}
+{% if consul_cluster_role in ['clients'] %}
+    "tls": true
+{% endif %}
+  }
+}

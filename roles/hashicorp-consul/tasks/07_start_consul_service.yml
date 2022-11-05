@@ -1,0 +1,10 @@
+---
+# Starts the Consul service
+
+# Validate configuration
+# sudo consul validate /etc/consul.d/
+
+# Systemctl
+# sudo systemctl enable consul
+# sudo systemctl start consul
+# sudo systemctl status consul

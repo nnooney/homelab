@@ -1,0 +1,13 @@
+---
+
+- name: Disable avahi-daemon systemd service
+  ansible.builtin.systemd:
+    name: avahi-daemon
+    enabled: no
+    state: stopped
+
+- name: Disable bluetooth systemd service
+  ansible.builtin.systemd:
+    name: bluetooth
+    enabled: no
+    state: stopped

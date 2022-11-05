@@ -1,0 +1,12 @@
+---
+
+# Cluster role (prime, servers, clients). Used to compare to the inventory group
+# name [consul_prime, consul_servers, consul_clients].
+allowed_cluster_roles:
+  - prime
+  - servers
+  - clients
+
+### System user and group
+consul_user: "consul"
+consul_group: "consul"

@@ -1,0 +1,6 @@
+---
+
+- name: Add HashiCorp Repository
+  ansible.builtin.include_role:
+    name: hashicorp-common
+    tasks_from: add_repository
